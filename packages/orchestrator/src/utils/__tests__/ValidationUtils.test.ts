@@ -17,14 +17,17 @@ describe('ValidationUtils', () => {
         type: SessionType.PLANNING,
         state: SessionState.ACTIVE,
         orchestrationId: 'orch-456',
-        startTime: new Date(),
+        timestamp: new Date(),
+        lastActivityAt: new Date(),
         context: {
           currentFocus: 'Planning phase',
-          nextSteps: ['Step 1', 'Step 2'],
+          messages: [],
+          artifacts: [],
           decisions: [],
           sequentialThinking: {
             steps: [],
           },
+          variables: {},
         },
         childSessionIds: [],
         metadata: {

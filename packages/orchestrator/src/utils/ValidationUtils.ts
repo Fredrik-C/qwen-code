@@ -17,9 +17,9 @@ export const SessionSchema = z.object({
   type: z.nativeEnum(SessionType),
   state: z.nativeEnum(SessionState),
   orchestrationId: z.string().min(1, 'Orchestration ID cannot be empty'),
-  timestamp: z.date(),
-  lastActivityAt: z.date(),
-  completedAt: z.date().optional(),
+  timestamp: z.union([z.date(), z.string().transform(str => new Date(str))]),
+  lastActivityAt: z.union([z.date(), z.string().transform(str => new Date(str))]),
+  completedAt: z.union([z.date(), z.string().transform(str => new Date(str))]).optional(),
   failureReason: z.string().optional(),
   parentSessionId: z.string().optional(),
   childSessionIds: z.array(z.string()).default([]),
@@ -61,16 +61,16 @@ export const TaskSchema = z.object({
   })).default([]),
   progress: z.object({
     completionPercentage: z.number().min(0).max(100),
-    startedAt: z.date().optional(),
-    completedAt: z.date().optional(),
+    startedAt: z.union([z.date(), z.string().transform(str => new Date(str))]).optional(),
+    completedAt: z.union([z.date(), z.string().transform(str => new Date(str))]).optional(),
   }),
   estimation: z.object({
     effortHours: z.number().positive().optional(),
     durationHours: z.number().positive().optional(),
     confidence: z.number().min(0).max(1).optional(),
   }).optional(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.union([z.date(), z.string().transform(str => new Date(str))]),
+  updatedAt: z.union([z.date(), z.string().transform(str => new Date(str))]),
 });
 
 /**

@@ -170,18 +170,22 @@ export interface CreateTaskParams {
   name: string;
   /** Task description */
   description: string;
+  /** Task status */
+  status?: TaskStatus;
   /** Task priority */
   priority?: TaskPriority;
   /** Parent orchestration ID */
   orchestrationId: string;
+  /** Task progress */
+  progress?: Partial<TaskProgress>;
+  /** Task estimation */
+  estimation?: Partial<TaskEstimation>;
   /** Parent task ID */
   parentTaskId?: string;
   /** Task dependencies */
   dependencies?: TaskDependency[];
   /** Acceptance criteria */
   acceptanceCriteria?: Omit<AcceptanceCriteria, 'id' | 'isMet'>[];
-  /** Task estimation */
-  estimation?: TaskEstimation;
   /** Task assignee */
   assignee?: string;
   /** Task tags */

@@ -89,6 +89,25 @@ export class StateManager {
   }
 
   /**
+   * Write file with retry mechanism for handling file lock issues
+   */
+  private async writeFileWithRetry(filePath: string, data: string, maxRetries: number = 3): Promise<void> {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        await fs.writeFile(filePath, data, 'utf-8');
+        return;
+      } catch (error: any) {
+        if (error.code === 'EBUSY' && attempt < maxRetries) {
+          // Wait a bit before retrying
+          await new Promise(resolve => setTimeout(resolve, 10 * attempt));
+          continue;
+        }
+        throw error;
+      }
+    }
+  }
+
+  /**
    * Initialize storage directories
    */
   async initialize(): Promise<void> {
@@ -124,10 +143,10 @@ export class StateManager {
         await this.createBackup('sessions', session.id);
       }
 
-      // Save session
+      // Save session with retry for file lock issues
       const filePath = path.join(this.sessionsDir, `${session.id}.json`);
       const data = JSON.stringify(validation.session, null, 2);
-      await fs.writeFile(filePath, data, 'utf-8');
+      await this.writeFileWithRetry(filePath, data);
 
     } catch (error) {
       if (error instanceof StorageError) {
