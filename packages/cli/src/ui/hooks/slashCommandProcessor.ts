@@ -31,6 +31,7 @@ import { CommandService } from '../../services/CommandService.js';
 import { BuiltinCommandLoader } from '../../services/BuiltinCommandLoader.js';
 import { FileCommandLoader } from '../../services/FileCommandLoader.js';
 import { McpPromptLoader } from '../../services/McpPromptLoader.js';
+import { createOrchestrationCommandLoader } from '@qwen-code/orchestrator';
 
 /**
  * Hook to define and process slash commands (e.g., /help, /clear).
@@ -199,6 +200,7 @@ export const useSlashCommandProcessor = (
         new McpPromptLoader(config),
         new BuiltinCommandLoader(config),
         new FileCommandLoader(config),
+        createOrchestrationCommandLoader(config),
       ];
       const commandService = await CommandService.create(
         loaders,
